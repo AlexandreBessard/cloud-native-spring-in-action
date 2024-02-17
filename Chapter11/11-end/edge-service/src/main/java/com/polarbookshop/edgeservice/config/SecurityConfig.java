@@ -17,20 +17,25 @@ import org.springframework.security.web.server.csrf.CookieServerCsrfTokenReposit
 import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.web.server.WebFilter;
 
-@EnableWebFluxSecurity
+@EnableWebFluxSecurity //Webflux  support
 public class SecurityConfig {
 
 	@Bean
 	SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveClientRegistrationRepository clientRegistrationRepository) {
 		return http
 				.authorizeExchange(exchange -> exchange
+						// Access policies
 						.pathMatchers("/", "/*.css", "/*.js", "/favicon.ico").permitAll()
 					 	.pathMatchers(HttpMethod.GET, "/books/**").permitAll()
+						// Other requests need to be authenticated
 						.anyExchange().authenticated()
 				)
+				// When an exception is thrown because a user is not authenticated, it replies with an HTTP 401 response.
 				.exceptionHandling(exceptionHandling -> exceptionHandling
 						.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)))
+				// Enables user authentication with OAuth2/OpenID Connect
 				.oauth2Login(Customizer.withDefaults())
+				// logout mechanism
 				.logout(logout -> logout.logoutSuccessHandler(oidcLogoutSuccessHandler(clientRegistrationRepository)))
 				.csrf(csrf -> csrf.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()))
 				.build();

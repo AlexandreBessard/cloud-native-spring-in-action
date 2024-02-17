@@ -17,8 +17,9 @@ public class OrderFunctions {
 
 	@Bean
 	public Consumer<Flux<OrderDispatchedMessage>> dispatchOrder(OrderService orderService) {
-		return flux -> orderService.consumeOrderDispatchedEvent(flux)
+		return flux -> orderService.consumeOrderDispatchedEvent(flux) // save to the database
 				.doOnNext(order -> log.info("The order with id {} is dispatched", order.id()))
+				// Subscribe to the stream
 				.subscribe();
 	}
 

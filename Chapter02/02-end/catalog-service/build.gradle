@@ -14,11 +14,13 @@ repositories {
 	mavenCentral()
 }
 
+// Dependencies used by the application
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+// Enable testing with the JUnit Platform provided by JUnit 5
 tasks.named('test') {
 	useJUnitPlatform()
 }

@@ -14,6 +14,11 @@ public class InMemoryBookRepository implements BookRepository {
 
 	private static final Map<String, Book> books = new ConcurrentHashMap<>();
 
+	static {
+		Book defaultBook = new Book("1234", "Title", "Author", 12.3);
+		books.put("1", defaultBook);
+	}
+
 	@Override
 	public Iterable<Book> findAll() {
 		return books.values();

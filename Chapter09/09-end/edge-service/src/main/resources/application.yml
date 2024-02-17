@@ -32,8 +32,8 @@ spring:
           max-idle-time: 15s
           max-life-time: 60s
       default-filters:
-        - SaveSession
-        - name: RequestRateLimiter
+        - SaveSession # Ensures the session data is saved before forwarding a request downstream
+        - name: RequestRateLimiter # filter's name
           args:
             redis-rate-limiter:
               replenishRate: 10
@@ -52,14 +52,14 @@ spring:
               basedOnPreviousValue: false
       routes:
         - id: catalog-route
-          uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
+          uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books #default value set if CATALOG_SERVICE_URL is undefined
           predicates:
             - Path=/books/**
           filters:
             - name: CircuitBreaker
               args:
                 name: catalogCircuitBreaker
-                fallbackUri: forward:/catalog-fallback
+                fallbackUri: forward:/catalog-fallback  # Forwards request to this URI when the circuit is open
         - id: order-route
           uri: ${ORDER_SERVICE_URL:http://localhost:9002}/orders
           predicates:

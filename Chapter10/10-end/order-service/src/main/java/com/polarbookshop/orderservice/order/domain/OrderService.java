@@ -38,6 +38,7 @@ public class OrderService {
 				.map(book -> buildAcceptedOrder(book, quantity))
 				.defaultIfEmpty(buildRejectedOrder(isbn, quantity))
 				.flatMap(orderRepository::save)
+				// publish event
 				.doOnNext(this::publishOrderAcceptedEvent);
 	}
 
@@ -56,14 +57,24 @@ public class OrderService {
 		}
 		var orderAcceptedMessage = new OrderAcceptedMessage(order.id());
 		log.info("Sending order accepted event with id: {}", order.id());
+		// Send the new order to the output stream
+		/*
+		At startup time, Spring Cloud Stream will notice that StreamBridge
+		wants to publish messages via an acceptOrder-out-0 binding, and
+		it will create one automatically. Similar to the bindings created from
+		functions, we can configure the destination name in RabbitMQ. Open the
+		application.yml file and configure the binding.
+		 */
 		var result = streamBridge.send("acceptOrder-out-0", orderAcceptedMessage);
 		log.info("Result of sending data for order with id {}: {}", order.id(), result);
 	}
 
 	public Flux<Order> consumeOrderDispatchedEvent(Flux<OrderDispatchedMessage> flux) {
 		return flux
+				// Accepts a reactive stream of OrderDispatchedMessage objects as input
 				.flatMap(message -> orderRepository.findById(message.orderId()))
 				.map(this::buildDispatchedOrder)
+				// save the updated order in the database
 				.flatMap(orderRepository::save);
 	}
 

@@ -105,10 +105,11 @@ services:
       - 6379:6379
   
   polar-rabbitmq:
-    image: rabbitmq:3.12-management
+    #image: rabbitmq:3.12-management
+    image: rabbitmq:3-management-alpine
     container_name: polar-rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
-    volumes:
+      - 5672:5672 # port where RabbitMQ listens for AMQP requests
+      - 15672:15672 # GUI ports
+    volumes: # config file mounted as volume
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf

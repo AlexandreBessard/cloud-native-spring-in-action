@@ -13,13 +13,14 @@ spring:
   r2dbc:
     username: user
     password: password
+    # polardb_order -> database name when using init.sql script
     url: r2dbc:postgresql://localhost:5432/polardb_order
     pool:
       max-create-connection-time: 2s
       initial-size: 5
       max-size: 10
   flyway:
-    user: ${spring.r2dbc.username}
+    user: ${spring.r2dbc.username} # value which comes from the same file
     password: ${spring.r2dbc.password}
     url: jdbc:postgresql://localhost:5432/polardb_order
   config:

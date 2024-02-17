@@ -9,7 +9,7 @@ services:
     image: "catalog-service"
     container_name: "catalog-service"
     ports:
-      - 9001:9001
+      - 9001:9001 #port mapping
       - 8001:8001
     environment:
       # Buildpacks environment variable to configure the number of threads in memory calculation
@@ -20,7 +20,8 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       - SPRING_DATASOURCE_URL=jdbc:postgresql://polar-postgres:5432/polardb_catalog
       - SPRING_PROFILES_ACTIVE=testdata
-  
+
+
   config-service:
     image: "config-service"
     container_name: "config-service"

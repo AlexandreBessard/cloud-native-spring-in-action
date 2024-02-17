@@ -16,15 +16,20 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJdbcTest
-@Import(DataConfig.class)
+@DataJdbcTest // Include  all Spring Data JDBC entities en repositories in the application context
+@Import(DataConfig.class) // Needed to enable auditing
+/*
+Disables the default behavior of relying on an embedded test database since we want to use
+Testcontainers
+ */
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("integration")
+@ActiveProfiles("integration") // loads application-integration.yaml
 class BookRepositoryJdbcTests {
 
     @Autowired
     private BookRepository bookRepository;
 
+    // Lower level object to interact with the database
     @Autowired
     private JdbcAggregateTemplate jdbcAggregateTemplate;
 

@@ -19,13 +19,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Import(TestChannelBinderConfiguration.class)
 class FunctionsStreamIntegrationTests {
-
+	/*
+	InputDestination bean representing the input
+	binding packlabel-in-0 (by default, since it’s the only one).
+	 */
 	@Autowired
 	private InputDestination input;
-
+	/*
+	OutputDestination bean representing the output
+	binding packlabel-out-0 (by default, since it’s the only one)
+	 */
 	@Autowired
 	private OutputDestination output;
-
+	// Uses Jackson to deserialize JSON message payloads to Java objects
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -36,7 +42,7 @@ class FunctionsStreamIntegrationTests {
 				.withPayload(new OrderAcceptedMessage(orderId)).build();
 		Message<OrderDispatchedMessage> expectedOutputMessage = MessageBuilder
 				.withPayload(new OrderDispatchedMessage(orderId)).build();
-
+		// send the message to the input channel
 		this.input.send(inputMessage);
 		assertThat(objectMapper.readValue(output.receive().getPayload(), OrderDispatchedMessage.class))
 				.isEqualTo(expectedOutputMessage.getPayload());

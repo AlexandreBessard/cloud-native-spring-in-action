@@ -39,7 +39,7 @@ spring:
       definition: dispatchOrder
     stream:
       bindings:
-        dispatchOrder-in-0:
+        dispatchOrder-in-0: # consumer, dispatchOrder() -> input binding submitOrder()
           destination: order-dispatched
           group: ${spring.application.name}
         acceptOrder-out-0:
@@ -48,7 +48,7 @@ spring:
         bindings:
           acceptOrder-out-0:
             producer:
-              transacted: true
+              transacted: true # Because use of @Transactional annotation from
   rabbitmq:
     host: localhost
     port: 5672

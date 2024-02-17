@@ -10,6 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record ClientProperties (
 
 	@NotNull
-	URI catalogServiceUri
+	URI catalogServiceUri // mapped from catalog-service-uri key property
 
 ){}

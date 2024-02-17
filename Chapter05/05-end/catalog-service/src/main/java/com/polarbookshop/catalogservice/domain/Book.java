@@ -39,7 +39,7 @@ public record Book (
         @LastModifiedDate
         Instant lastModifiedDate,
 
-        @Version
+        @Version // Used for optimistic locking
         int version
 
 ){

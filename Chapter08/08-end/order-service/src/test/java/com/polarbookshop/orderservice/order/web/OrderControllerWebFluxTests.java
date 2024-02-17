@@ -17,6 +17,7 @@ import static org.mockito.BDDMockito.given;
 @WebFluxTest(OrderController.class)
 class OrderControllerWebFluxTests {
 
+	// A WebClient variant with extra features to make testing RESTful services easier
 	@Autowired
 	private WebTestClient webClient;
 

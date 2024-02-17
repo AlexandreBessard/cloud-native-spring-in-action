@@ -15,16 +15,22 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
 @DataR2dbcTest
-@Import(DataConfig.class)
-@Testcontainers
+@Import(DataConfig.class) // Enable auditing
+@Testcontainers // Activates automatic startup and cleanup of test containers
 class OrderRepositoryR2dbcTests {
 
-    @Container
-    static PostgreSQLContainer<?> postgresql = new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.10"));
+    @Container // PostGreSQL container
+    static PostgreSQLContainer<?> postgresql =
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.10"));
 
     @Autowired
     private OrderRepository orderRepository;
 
+    // Overwrites R2DBC and Flyway configuration to point to the test PostgreSQL instance
+    /*
+    DynamicPropertyRegistry methods so that they can add properties to the Environment
+    that have dynamically resolved values
+     */
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.r2dbc.url", OrderRepositoryR2dbcTests::r2dbcUrl);

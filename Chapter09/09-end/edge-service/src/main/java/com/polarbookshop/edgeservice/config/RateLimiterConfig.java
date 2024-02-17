@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RateLimiterConfig {
 
+	// Return a constant key
 	@Bean
 	public KeyResolver keyResolver() {
 		return exchange -> Mono.just("anonymous");

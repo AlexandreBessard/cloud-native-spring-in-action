@@ -18,6 +18,10 @@ public class BookDataLoader {
 		this.bookRepository = bookRepository;
 	}
 
+	/*
+	Trigger the test data generation after the application has
+	completed the startup phase
+	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void loadBookTestData() {
 		var book1 = new Book("1234567891", "Northern Lights", "Lyra Silverstar", 9.90);

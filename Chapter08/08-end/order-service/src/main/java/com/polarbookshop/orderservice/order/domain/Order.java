@@ -8,18 +8,19 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("orders")
+@Table("orders") // Mapping between java object and the table
 public record Order (
 
 	@Id
 	Long id,
 
-	String bookIsbn,
+	String bookIsbn, // book_isbn
 	String bookName,
 	Double bookPrice,
 	Integer quantity,
 	OrderStatus status,
 
+	// Metadata
 	@CreatedDate
 	Instant createdDate,
 
@@ -27,7 +28,7 @@ public record Order (
 	Instant lastModifiedDate,
 
 	@Version
-	int version
+	int version // Handling concurrent updates and using optimistic locking
 ){
 
 	public static Order of(String bookIsbn, String bookName, Double bookPrice, Integer quantity, OrderStatus status) {
