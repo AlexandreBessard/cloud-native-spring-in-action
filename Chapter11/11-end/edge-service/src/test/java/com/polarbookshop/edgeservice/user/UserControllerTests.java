@@ -17,12 +17,16 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WebFluxTest(UserController.class)
-@Import(SecurityConfig.class)
+@Import(SecurityConfig.class) // Import Security Config class
 class UserControllerTests {
 
 	@Autowired
 	WebTestClient webClient;
 
+	/*
+	A mock bean to skip the interaction with Keycloak when retrieving information about the Client
+	registration
+	 */
 	@MockBean
 	ReactiveClientRegistrationRepository clientRegistrationRepository;
 
@@ -40,15 +44,20 @@ class UserControllerTests {
 		var expectedUser = new User("jon.snow", "Jon", "Snow", List.of("employee", "customer"));
 
 		webClient
+				// start - Defines an authentication context based on OIDC and uses the expected user
 				.mutateWith(configureMockOidcLogin(expectedUser))
 				.get()
 				.uri("/user")
 				.exchange()
 				.expectStatus().is2xxSuccessful()
+				// end
 				.expectBody(User.class)
 				.value(user -> assertThat(user).isEqualTo(expectedUser));
 	}
 
+	/*
+	Builds a mock ID Token
+	 */
 	private SecurityMockServerConfigurers.OidcLoginMutator configureMockOidcLogin(User expectedUser) {
 		return SecurityMockServerConfigurers.mockOidcLogin().idToken(builder -> {
 			builder.claim(StandardClaimNames.PREFERRED_USERNAME, expectedUser.username());

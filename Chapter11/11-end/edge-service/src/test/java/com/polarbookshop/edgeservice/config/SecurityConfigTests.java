@@ -50,7 +50,9 @@ class SecurityConfigTests {
 				.thenReturn(Mono.just(testClientRegistration()));
 
 		webClient
+				// Use a mock ID Token to authenticate the user
 				.mutateWith(SecurityMockServerConfigurers.mockOidcLogin())
+				// Enhances the request to provide the required CSRF token
 				.mutateWith(SecurityMockServerConfigurers.csrf())
 				.post()
 				.uri("/logout")
@@ -58,6 +60,9 @@ class SecurityConfigTests {
 				.expectStatus().isFound();
 	}
 
+	/*
+	A mock ClientRegistration used by Spring Security to get the URLs to contact Keycloak
+	 */
 	private ClientRegistration testClientRegistration() {
 		return ClientRegistration.withRegistrationId("test")
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
